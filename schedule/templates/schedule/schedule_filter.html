@@ -1,0 +1,32 @@
+{# /StudX_dir/StudX/schedule/templates/schedule/schedule_filter.html #}
+
+{% load i18n %}
+
+<nav class="navbar navbar-light bg-light justify-content-between">
+	<div class="btn-group" role="group" aria-label="First group">
+		<button type="button" class="btn btn-sm btn-outline-primary" disabled>{{ scheduleOf }}</button>
+	</div>
+
+	<!-- 888888 -->
+	<div class="btn-group" role="group" aria-label="First group">
+		<div class="dropdown">
+			<button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			{% trans 'Classe' %}
+			</button>
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+			{% for c in classes %}
+				<a class="dropdown-item" href="{% url 'configuration:getSchedule' c.classe_name %}">{{c.classe_name}}</a>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
+	<!-- 888888 -->
+
+	</form>
+	<div class="btn-group float-right" role="group">
+		<a class="btn btn-secondary btn-sm" href="{% url 'schedule:create_slot' %}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+		<a class="btn btn-sm btn-secondary" href="#"><i class="fas fa-flag"></i></a>
+	</div>
+
+
+</nav>

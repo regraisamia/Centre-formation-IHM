@@ -1,0 +1,5 @@
+- [x] Fix import in student/models.py: change 'from tinymce import HTMLField' to 'from tinymce.models import HTMLField'
+- [x] Fix import in communication/models.py: change 'from tinymce import HTMLField' to 'from tinymce.models import HTMLField'
+- [x] Run python manage.py makemigrations to verify the fix
+- [ ] Install missing dependencies from requirements.txt
+- [ ] Re-run python manage.py makemigrations after installation

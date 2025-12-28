@@ -1,0 +1,103 @@
+{# /StudX_dir/StudX/schedule/templates/schedule/schedule_main.html #}
+
+{% extends 'dashboard_base.html' %}
+{% load static student_tags i18n  %}
+
+{% block title %}schedule {% endblock %}
+	
+{% block extra_meta %}
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock extra_meta %}
+
+{% block extra_css %}
+	<link href="{% static 'vendor/schedule/css/style.css' %}" rel="stylesheet">
+{% endblock extra_css %}
+
+{% block extra_script %}
+	<script>document.getElementsByTagName("html")[0].className += " js";</script>
+{% endblock extra_script %}
+
+
+{% block content %}
+<div class="card">  
+{% include 'schedule/schedule_filter.html' %} 
+	<div class="card-body"> 
+{% if schedule|length == 0 %}
+	<!-- Nothing -->
+{% else %}
+	  <div class="cd-schedule cd-schedule--loading margin-top--lg margin-bottom--lg js-cd-schedule">
+		<div class="cd-schedule__timeline">
+		  <ul>
+			{% for time in TimeList %}
+				<li><span>{{time}}</span></li>
+			{% endfor %}
+		  </ul>
+		</div> <!-- .cd-schedule__timeline -->
+	  
+		<div class="cd-schedule__events">
+		  <ul>
+			{% for day in days %}
+			<li class="cd-schedule__group">
+			  <div class="cd-schedule__top-info"><span>{{day.1}}</span></div>
+				
+				<ul>
+				{% for slot in schedule|get_item:day.1 %}
+
+					<li class="cd-schedule__event">
+						<a class="cd-schedule__event__link" data-start="{{slot.startAt|time:'H:i'}}" data-end="{{slot.finishtAt|time:'H:i'}}" data-content="subject-{{slot.subject.id}}" data-event="event-{{slot.subject.id}}" href="#0">
+						<em class="cd-schedule__name">{{slot.subject}} <br> {{ slot.location }}</em>
+						</a>
+						
+						<div class="cd-schedule-content subject-{{slot.subject.id}}">
+							<div>
+								<h4>{% trans 'Teacher' %}</h4>
+								<ul
+								{% for teacher in slot.teacher.all %}
+									<li>{{teacher.first_name}} {{teacher.last_name}}</li>
+								{% endfor %}
+								</ul>
+								<div class="btn-group btn-group-sm vertical-center " role="group" aria-label="Event button">
+									<a class="btn btn-primary btn-sm" href="{% url 'schedule:edit_slot' slot.id %}"><i class="fas fa-pencil-alt"></i></a>
+									<a class="btn btn-primary btn-sm" href=""><i class="fas fa-trash-alt"></i></a>
+								</div>
+								
+							</div>
+						</div>
+					</li>
+
+				{% endfor %}
+				</ul>
+			</li>
+			{% endfor %}
+		  </ul>
+		</div>
+	  
+		<div class="cd-schedule-modal">
+		  <header class="cd-schedule-modal__header">
+			<div class="cd-schedule-modal__content">
+			  <span class="cd-schedule-modal__date"></span>
+			  <h3 class="cd-schedule-modal__name"></h3>
+			</div>
+	  
+			<div class="cd-schedule-modal__header-bg"></div>
+		  </header>
+	  
+		  <div class="cd-schedule-modal__body">
+			<div class="cd-schedule-modal__event-info"></div>
+			<div class="cd-schedule-modal__body-bg"></div>
+		  </div>
+	  
+		  <a href="#0" class="cd-schedule-modal__close text--replace">Close</a>
+		</div>
+	  
+		<div class="cd-schedule__cover-layer"></div>
+	  </div> <!-- .cd-schedule -->
+{% endif %}
+	</div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+	<script src="{% static 'vendor/schedule/js/util.js' %}"></script>
+	<script src="{% static 'vendor/schedule/js/main.js' %}"></script>
+{% endblock extra_js %}

@@ -1,0 +1,144 @@
+{
+  "students": [
+    {
+      "matricule": "ST20240001",
+      "first_name": "Mohammed",
+      "last_name": "Bennani",
+      "city": "Marrakech",
+      "formation": "Gestion"
+    },
+    {
+      "matricule": "ST20240002",
+      "first_name": "Ahmed",
+      "last_name": "Fassi",
+      "city": "Fes",
+      "formation": "Design"
+    },
+    {
+      "matricule": "ST20240003",
+      "first_name": "Mohammed",
+      "last_name": "Fassi",
+      "city": "Rabat",
+      "formation": "Gestion"
+    },
+    {
+      "matricule": "ST20240004",
+      "first_name": "Youssef",
+      "last_name": "Tazi",
+      "city": "Agadir",
+      "formation": "Gestion"
+    },
+    {
+      "matricule": "ST20240005",
+      "first_name": "Mohammed",
+      "last_name": "Tazi",
+      "city": "Fes",
+      "formation": "Marketing"
+    },
+    {
+      "matricule": "ST20240006",
+      "first_name": "Khadija",
+      "last_name": "Tazi",
+      "city": "Rabat",
+      "formation": "Design"
+    },
+    {
+      "matricule": "ST20240007",
+      "first_name": "Ahmed",
+      "last_name": "Alami",
+      "city": "Marrakech",
+      "formation": "Design"
+    },
+    {
+      "matricule": "ST20240008",
+      "first_name": "Fatima",
+      "last_name": "Bennani",
+      "city": "Rabat",
+      "formation": "Dev Web"
+    },
+    {
+      "matricule": "ST20240009",
+      "first_name": "Ahmed",
+      "last_name": "Fassi",
+      "city": "Casablanca",
+      "formation": "Gestion"
+    },
+    {
+      "matricule": "ST20240010",
+      "first_name": "Aicha",
+      "last_name": "Alami",
+      "city": "Marrakech",
+      "formation": "Design"
+    },
+    {
+      "matricule": "ST20240011",
+      "first_name": "Youssef",
+      "last_name": "Alami",
+      "city": "Casablanca",
+      "formation": "Dev Web"
+    },
+    {
+      "matricule": "ST20240012",
+      "first_name": "Mohammed",
+      "last_name": "Idrissi",
+      "city": "Agadir",
+      "formation": "Dev Web"
+    },
+    {
+      "matricule": "ST20240013",
+      "first_name": "Fatima",
+      "last_name": "Idrissi",
+      "city": "Fes",
+      "formation": "Dev Web"
+    },
+    {
+      "matricule": "ST20240014",
+      "first_name": "Aicha",
+      "last_name": "Alami",
+      "city": "Agadir",
+      "formation": "Gestion"
+    },
+    {
+      "matricule": "ST20240015",
+      "first_name": "Aicha",
+      "last_name": "Bennani",
+      "city": "Rabat",
+      "formation": "Gestion"
+    },
+    {
+      "matricule": "ST20240016",
+      "first_name": "Aicha",
+      "last_name": "Fassi",
+      "city": "Agadir",
+      "formation": "Dev Web"
+    },
+    {
+      "matricule": "ST20240017",
+      "first_name": "Ahmed",
+      "last_name": "Alami",
+      "city": "Rabat",
+      "formation": "Dev Web"
+    },
+    {
+      "matricule": "ST20240018",
+      "first_name": "Fatima",
+      "last_name": "Tazi",
+      "city": "Agadir",
+      "formation": "Gestion"
+    },
+    {
+      "matricule": "ST20240019",
+      "first_name": "Aicha",
+      "last_name": "Idrissi",
+      "city": "Agadir",
+      "formation": "Dev Web"
+    },
+    {
+      "matricule": "ST20240020",
+      "first_name": "Mohammed",
+      "last_name": "Tazi",
+      "city": "Agadir",
+      "formation": "Dev Web"
+    }
+  ]
+}
