@@ -1,5 +1,3 @@
-# /StudX_dir/StudX/configuration/views.py
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -21,50 +19,23 @@ from common.utils import *
 # import models
 from user.models import User
 from configuration.models import Classes
+from student.models import Student
 
-# *** Code start here ***
-
-def generate_teacher_template(request):
-	workbook = xlsxwriter.Workbook('teacher.xlsx')
-	teacher_sheet = workbook.add_worksheet('teacher')
-	
-	teacher = User.objects.filter(groups=3)
-	print(teacher)
-	
-	for cnt, item in enumerate(teacher,1):
-	  teacher_sheet.write('A{}'.format(cnt),item.username)
-
-	workbook.close()
-	return redirect('configuration:init_with_file')
-
-# @login_required
-# def download_template(request, type):
-	# path = doc_obj.document_file.path
-	# file_path = os.path.join(settings.MEDIA_ROOT, path)
-	# if os.path.exists(file_path):
-		# with open(file_path, 'rb') as fh:
-			# response = HttpResponse(fh.read(), content_type="application/vnd.ms-excel")
-			# response['Content-Disposition'] = 'inline; filename=' + \
-			# os.path.basename(file_path)
-			# return response
-
+@login_required
 def classes_list(request):
-	classes_obj_list = Classes.objects.all()
-	
-	variables = {
-		'classes_obj_list': classes_obj_list, 
-	}
-	
-	template = 'configuration/classes_list.html'
-	
-	return render(request, template, variables)
-
-
-def init_with_file(request):
-
-	variables = {}
-	
-	template = 'configuration/init_file_form.html'
-	
-	return render(request, template, variables)
+    classes_obj_list = Classes.objects.all()
+    
+    # Add statistics
+    total_formations = classes_obj_list.count()
+    total_students_enrolled = Student.objects.count()
+    
+    context = {
+        'formations': classes_obj_list,
+        'total_formations': total_formations,
+        'total_students_enrolled': total_students_enrolled,
+        'avg_duration': '4.5',
+        'success_rate': '87'
+    }
+    
+    return render(request, 'formations_list.html', context)
 	

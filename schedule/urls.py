@@ -1,5 +1,3 @@
-# /StudX_dir/StudX/schedule/urls.py
-
 from django.urls import path
 from django.conf.urls.static import static
 from django.conf import settings
@@ -10,7 +8,6 @@ from schedule import views
 app_name = 'schedule'
 
 urlpatterns = [
-	path('schedule/', views.schedule_main, name='schedule_main'),
-	path('new/', views.create_edit_slot, name='create_slot'),
-	path('slot/<int:id>/edit/', views.create_edit_slot, name='edit_slot'),
+	path('schedule/', views.schedule_list, name='schedule_main'),
+	path('list/', views.schedule_list, name='list'),
 	] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,0 +1,315 @@
+{% extends 'modern_dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Gestion des Formations{% endblock %}
+
+{% block extra_css %}
+<style>
+    .formation-card {
+        transition: all 0.3s ease;
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    }
+    
+    .formation-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .formation-header {
+        background: linear-gradient(135deg, #2E8B57, #228B22);
+        color: white;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .formation-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 100px;
+        height: 100px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .formation-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+    
+    .level-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    .stats-row {
+        background: #f8f9fa;
+        margin: 0 -20px -20px -20px;
+        padding: 15px 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">
+                <i class="fas fa-graduation-cap me-2 text-primary"></i>
+                Gestion des Formations
+            </h2>
+            <p class="text-muted mb-0">Centre de Formation Professionnelle Al Manar</p>
+        </div>
+        <div>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addFormationModal">
+                <i class="fas fa-plus me-1"></i>
+                Nouvelle Formation
+            </button>
+            <button class="btn btn-outline-secondary">
+                <i class="fas fa-download me-1"></i>
+                Exporter
+            </button>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-book fa-2x mb-2"></i>
+                    <h4>{{ total_formations|default:12 }}</h4>
+                    <small>Formations Actives</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-users fa-2x mb-2"></i>
+                    <h4>{{ total_students_enrolled|default:156 }}</h4>
+                    <small>Étudiants Inscrits</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x mb-2"></i>
+                    <h4>{{ avg_duration|default:"4.5" }} mois</h4>
+                    <small>Durée Moyenne</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-certificate fa-2x mb-2"></i>
+                    <h4>{{ success_rate|default:"87" }}%</h4>
+                    <small>Taux de Réussite</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Formations Grid -->
+    <div class="row">
+        <!-- Sample Formation Cards -->
+        {% for formation in formations|default:"123456789012" %}
+        <div class="col-xl-4 col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
+            <div class="card formation-card">
+                <div class="formation-header">
+                    <span class="level-badge bg-light text-dark">
+                        {% cycle "Débutant" "Intermédiaire" "Avancé" "Expert" %}
+                    </span>
+                    <div class="formation-icon">
+                        {% cycle "💻" "📊" "🎨" "💼" "🔧" "🌐" %}
+                    </div>
+                    <h5 class="mb-1">
+                        {% if formation.classe_name %}
+                            {{ formation.classe_name }}
+                        {% else %}
+                            {% cycle "Développement Web Full Stack" "Marketing Digital Avancé" "Design Graphique Pro" "Gestion de Projet Agile" "Comptabilité & Finance" "Cybersécurité" %}
+                        {% endif %}
+                    </h5>
+                    <small class="opacity-75">
+                        {% cycle "6 mois" "4 mois" "5 mois" "3 mois" "7 mois" "8 mois" %}
+                    </small>
+                </div>
+                
+                <div class="card-body">
+                    <p class="text-muted mb-3">
+                        {% cycle "Formation complète en développement web moderne avec HTML5, CSS3, JavaScript, React, Node.js et bases de données." "Maîtrisez les stratégies marketing digitales, SEO, SEM, réseaux sociaux et analytics pour booster votre carrière." "Apprenez les outils Adobe Creative Suite, typography, branding et création d'identités visuelles professionnelles." "Méthodologies Agile, Scrum, outils de gestion et leadership d'équipes pour gérer des projets avec succès." "Comptabilité générale, fiscalité marocaine, logiciels comptables et gestion financière d'entreprise." "Sécurité informatique, ethical hacking, audit de sécurité et protection des systèmes d'information." %}
+                    </p>
+                    
+                    <div class="row text-center mb-3">
+                        <div class="col-4">
+                            <small class="text-muted d-block">Étudiants</small>
+                            <strong>{% cycle "24" "18" "15" "12" "20" "8" %}</strong>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted d-block">Prix</small>
+                            <strong>{% cycle "8500" "6500" "6000" "5500" "7000" "9500" %} DH</strong>
+                        </div>
+                        <div class="col-4">
+                            <small class="text-muted d-block">Places</small>
+                            <strong class="text-success">{% cycle "6" "12" "10" "8" "5" "17" %} libres</strong>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-eye me-1"></i>
+                            Détails
+                        </button>
+                        <button class="btn btn-sm btn-outline-success">
+                            <i class="fas fa-user-plus me-1"></i>
+                            Inscrire
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary">
+                            <i class="fas fa-edit me-1"></i>
+                            Modifier
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="stats-row">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <small class="text-muted">Prochaine session</small><br>
+                            <strong class="small">{% cycle "15 Jan 2024" "22 Jan 2024" "05 Fév 2024" "12 Fév 2024" "19 Fév 2024" "26 Fév 2024" %}</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted">Formateur</small><br>
+                            <strong class="small">{% cycle "M. Alami" "Mme Bennani" "M. Tazi" "Mme Fassi" "M. Idrissi" "M. Kettani" %}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- Add Formation Modal -->
+<div class="modal fade" id="addFormationModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>
+                    Nouvelle Formation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addFormationForm" class="needs-validation" novalidate>
+                    <div class="row">
+                        <div class="col-md-8 mb-3">
+                            <label class="form-label">Nom de la Formation *</label>
+                            <input type="text" class="form-control" placeholder="Ex: Développement Web Full Stack" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Durée *</label>
+                            <select class="form-select" required>
+                                <option value="">Sélectionner</option>
+                                <option value="3">3 mois</option>
+                                <option value="4">4 mois</option>
+                                <option value="5">5 mois</option>
+                                <option value="6">6 mois</option>
+                                <option value="8">8 mois</option>
+                                <option value="12">12 mois</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Niveau</label>
+                            <select class="form-select">
+                                <option value="debutant">Débutant</option>
+                                <option value="intermediaire">Intermédiaire</option>
+                                <option value="avance">Avancé</option>
+                                <option value="expert">Expert</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Prix (DH)</label>
+                            <input type="number" class="form-control" placeholder="5000">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Capacité Maximum</label>
+                            <input type="number" class="form-control" placeholder="25" value="25">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Formateur Principal</label>
+                            <select class="form-select">
+                                <option value="">Sélectionner un formateur</option>
+                                <option value="1">Mohammed Alami - Développement</option>
+                                <option value="2">Fatima Bennani - Marketing</option>
+                                <option value="3">Youssef Tazi - Design</option>
+                                <option value="4">Aicha Fassi - Gestion</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" rows="3" placeholder="Description détaillée de la formation..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Prérequis</label>
+                        <textarea class="form-control" rows="2" placeholder="Prérequis nécessaires pour cette formation..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary btn-loading" onclick="saveFormation()">
+                    <i class="fas fa-save me-1"></i>
+                    Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function saveFormation() {
+    const form = document.getElementById('addFormationForm');
+    if (form.checkValidity()) {
+        // Simulate saving
+        setTimeout(() => {
+            Utils.showToast('Formation ajoutée avec succès!', 'success');
+            bootstrap.Modal.getInstance(document.getElementById('addFormationModal')).hide();
+            form.reset();
+            // Reload page or add to list
+            location.reload();
+        }, 2000);
+    } else {
+        form.classList.add('was-validated');
+    }
+}
+</script>
+{% endblock %}

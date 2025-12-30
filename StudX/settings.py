@@ -87,12 +87,9 @@ WSGI_APPLICATION = 'StudX.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'StudX_database',
-        'USER': 'root',      # Nom d'utilisateur par défaut de XAMPP
-        'PASSWORD': '',      # Laissez vide si vous n'avez pas mis de mot de passe dans XAMPP
-        'HOST': '127.0.0.1', # ou 'localhost'
-        'PORT': '3306',	}
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 
