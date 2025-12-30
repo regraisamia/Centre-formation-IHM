@@ -3,425 +3,369 @@
 
 {% block title %}Liste des Étudiants{% endblock %}
 
-{% block extra_css %}
-<style>
-    .search-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        border-radius: 15px;
-        padding: 25px;
-        margin-bottom: 25px;
-    }
-    
-    .student-card {
-        transition: all 0.3s ease;
-        border: none;
-        border-radius: 15px;
-        overflow: hidden;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
-    }
-    
-    .student-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-    }
-    
-    .student-avatar {
-        width: 60px;
-        height: 60px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #2E8B57, #228B22);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-size: 1.5rem;
-        font-weight: bold;
-    }
-    
-    .status-badge {
-        border-radius: 20px;
-        padding: 5px 12px;
-        font-size: 0.8rem;
-        font-weight: 500;
-    }
-    
-    .filter-chip {
-        background: rgba(46, 139, 87, 0.1);
-        border: 1px solid #2E8B57;
-        color: #2E8B57;
-        border-radius: 20px;
-        padding: 5px 15px;
-        margin: 2px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .filter-chip:hover, .filter-chip.active {
-        background: #2E8B57;
-        color: white;
-    }
-    
-    .stats-mini {
-        background: white;
-        border-radius: 10px;
-        padding: 15px;
-        text-align: center;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="container-fluid">
-    <!-- Page Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="mb-1">
-                <i class="fas fa-user-graduate me-2 text-primary"></i>
-                Gestion des Étudiants
-            </h2>
-            <p class="text-muted mb-0">Centre de Formation Professionnelle</p>
-        </div>
-        <div>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#addStudentModal">
-                <i class="fas fa-plus me-1"></i>
-                Nouvel Étudiant
-            </button>
-            <button class="btn btn-outline-secondary" onclick="exportStudents()">
-                <i class="fas fa-download me-1"></i>
-                Exporter
-            </button>
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Gestion des Étudiants</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal">
+            <i class="fas fa-plus me-1"></i>Nouvel Étudiant
+        </button>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-number">{{ total_students }}</div>
+            <div class="stat-label">Total Étudiants</div>
         </div>
     </div>
-
-    <!-- Statistics Row -->
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="stats-mini" data-aos="fade-up">
-                <div class="text-primary mb-2">
-                    <i class="fas fa-users fa-2x"></i>
-                </div>
-                <h4 class="mb-1">{{ total_students|default:156 }}</h4>
-                <small class="text-muted">Total Étudiants</small>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-user-check"></i>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stats-mini" data-aos="fade-up" data-aos-delay="100">
-                <div class="text-success mb-2">
-                    <i class="fas fa-user-check fa-2x"></i>
-                </div>
-                <h4 class="mb-1">{{ active_students|default:142 }}</h4>
-                <small class="text-muted">Actifs</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stats-mini" data-aos="fade-up" data-aos-delay="200">
-                <div class="text-warning mb-2">
-                    <i class="fas fa-graduation-cap fa-2x"></i>
-                </div>
-                <h4 class="mb-1">{{ graduated_students|default:89 }}</h4>
-                <small class="text-muted">Diplômés</small>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="stats-mini" data-aos="fade-up" data-aos-delay="300">
-                <div class="text-info mb-2">
-                    <i class="fas fa-calendar-alt fa-2x"></i>
-                </div>
-                <h4 class="mb-1">{{ new_this_month|default:23 }}</h4>
-                <small class="text-muted">Ce mois</small>
-            </div>
+            <div class="stat-number">{{ active_students }}</div>
+            <div class="stat-label">Actifs</div>
         </div>
     </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-money-bill"></i>
+            </div>
+            <div class="stat-number">{{ active_students }}</div>
+            <div class="stat-label">Payés</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-calendar"></i>
+            </div>
+            <div class="stat-number">{{ students.paginator.count }}</div>
+            <div class="stat-label">Ce mois</div>
+        </div>
+    </div>
+</div>
 
-    <!-- Search and Filters -->
-    <div class="search-card" data-aos="fade-up">
-        <div class="row align-items-center">
+<!-- Search -->
+<div class="search-box mb-4">
+    <form method="GET">
+        <div class="row">
             <div class="col-md-6">
                 <div class="input-group">
-                    <span class="input-group-text bg-white border-0">
-                        <i class="fas fa-search text-muted"></i>
+                    <span class="input-group-text">
+                        <i class="fas fa-search"></i>
                     </span>
-                    <input type="text" class="form-control border-0" id="searchInput" 
-                           placeholder="Rechercher par nom, matricule, CIN...">
+                    <input type="text" name="search" class="form-control" placeholder="Rechercher un étudiant..." value="{{ search|default:'' }}">
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="d-flex flex-wrap">
-                    <span class="filter-chip active" data-filter="all">Tous</span>
-                    <span class="filter-chip" data-filter="active">Actifs</span>
-                    <span class="filter-chip" data-filter="graduated">Diplômés</span>
-                    <span class="filter-chip" data-filter="suspended">Suspendus</span>
-                </div>
+            <div class="col-md-3">
+                <select name="classe" class="form-select">
+                    <option value="">Toutes les classes</option>
+                    {% for classe in classes %}
+                    <option value="{{ classe.classe_name }}" {% if classe_filter == classe.classe_name %}selected{% endif %}>
+                        {{ classe.classe_name }}
+                    </option>
+                    {% endfor %}
+                </select>
             </div>
-        </div>
-    </div>
-
-    <!-- Students Grid -->
-    <div class="row" id="studentsContainer">
-        <!-- Sample Student Cards (replace with dynamic data) -->
-        {% for student in students|default:"123456789012345678901234567890" %}
-        <div class="col-xl-4 col-lg-6 mb-4 student-item" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:100 }}">
-            <div class="card student-card">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="student-avatar me-3">
-                            {% if student.fname %}
-                                {{ student.fname|first }}{{ student.lname|first }}
-                            {% else %}
-                                {{ forloop.counter|first }}S
-                            {% endif %}
-                        </div>
-                        <div class="flex-grow-1">
-                            <h6 class="mb-1">
-                                {% if student.fname %}
-                                    {{ student.fname }} {{ student.lname }}
-                                {% else %}
-                                    {% cycle "Mohammed Alami" "Fatima Bennani" "Youssef Tazi" "Aicha Fassi" "Omar Idrissi" "Khadija Kettani" %}
-                                {% endif %}
-                            </h6>
-                            <small class="text-muted">
-                                {% if student.matricule %}
-                                    {{ student.matricule }}
-                                {% else %}
-                                    ST2024{{ forloop.counter|stringformat:"04d" }}
-                                {% endif %}
-                            </small>
-                        </div>
-                        <div>
-                            <span class="status-badge bg-success text-white">
-                                {% if student.status %}
-                                    {{ student.get_status_display }}
-                                {% else %}
-                                    Actif
-                                {% endif %}
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="row text-center mb-3">
-                        <div class="col-4">
-                            <small class="text-muted d-block">Formation</small>
-                            <strong class="small">
-                                {% if student.classe %}
-                                    {{ student.classe.classe_name|truncatechars:15 }}
-                                {% else %}
-                                    {% cycle "Dev Web" "Marketing" "Gestion" "Design" "Comptabilité" %}
-                                {% endif %}
-                            </strong>
-                        </div>
-                        <div class="col-4">
-                            <small class="text-muted d-block">Âge</small>
-                            <strong class="small">
-                                {% if student.get_age %}
-                                    {{ student.get_age }} ans
-                                {% else %}
-                                    {% cycle "22" "25" "28" "24" "26" "23" %} ans
-                                {% endif %}
-                            </strong>
-                        </div>
-                        <div class="col-4">
-                            <small class="text-muted d-block">Ville</small>
-                            <strong class="small">
-                                {% if student.address.city %}
-                                    {{ student.address.city }}
-                                {% else %}
-                                    {% cycle "Casablanca" "Rabat" "Fès" "Marrakech" "Agadir" "Tanger" %}
-                                {% endif %}
-                            </strong>
-                        </div>
-                    </div>
-                    
-                    <div class="d-flex justify-content-between">
-                        <button class="btn btn-sm btn-outline-primary" onclick="viewStudent('{{ student.uuid|default:forloop.counter }}')">
-                            <i class="fas fa-eye me-1"></i>
-                            Voir
-                        </button>
-                        <button class="btn btn-sm btn-outline-secondary" onclick="editStudent('{{ student.uuid|default:forloop.counter }}')">
-                            <i class="fas fa-edit me-1"></i>
-                            Modifier
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger" onclick="deleteStudent('{{ student.uuid|default:forloop.counter }}')">
-                            <i class="fas fa-trash me-1"></i>
-                            Supprimer
-                        </button>
-                    </div>
-                </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-search me-1"></i>Rechercher
+                </button>
             </div>
         </div>
-        {% endfor %}
-    </div>
-
-    <!-- Pagination -->
-    <nav aria-label="Navigation des pages" class="mt-4">
-        <ul class="pagination justify-content-center">
-            <li class="page-item disabled">
-                <a class="page-link" href="#" tabindex="-1">Précédent</a>
-            </li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#">Suivant</a>
-            </li>
-        </ul>
-    </nav>
+    </form>
 </div>
+
+<!-- Students List -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-users me-1"></i>
+        Liste des Étudiants
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Étudiant</th>
+                        <th>Matricule</th>
+                        <th>Classe</th>
+                        <th>Paiement</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="student-avatar me-3">
+                                    {{ student.fname.0 }}{{ student.lname.0 }}
+                                </div>
+                                <div>
+                                    <strong>{{ student.fname }} {{ student.lname }}</strong><br>
+                                    <small class="text-muted">{{ student.get_age }} ans</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>{{ student.matricule }}</td>
+                        <td>{{ student.classe.classe_name|default:"Non assigné" }}</td>
+                        <td>
+                            <span class="status-active payment-status" data-student-id="{{ student.uuid }}" style="cursor: pointer;">
+                                ✓ Payé
+                            </span>
+                        </td>
+                        <td><span class="status-active">Actif</span></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'student:student_detail' student.uuid %}" class="btn btn-outline-primary" title="Voir">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <button class="btn btn-outline-danger delete-student" data-student-id="{{ student.uuid }}" data-student-name="{{ student.fname }} {{ student.lname }}" title="Supprimer">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Aucun étudiant trouvé</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination -->
+{% if students.has_other_pages %}
+<nav aria-label="Navigation des pages">
+    <ul class="pagination justify-content-center">
+        {% if students.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ students.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if classe_filter %}&classe={{ classe_filter }}{% endif %}">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+            </li>
+        {% endif %}
+        
+        {% for num in students.paginator.page_range %}
+            {% if students.number == num %}
+                <li class="page-item active">
+                    <span class="page-link">{{ num }}</span>
+                </li>
+            {% elif num > students.number|add:'-3' and num < students.number|add:'3' %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ num }}{% if search %}&search={{ search }}{% endif %}{% if classe_filter %}&classe={{ classe_filter }}{% endif %}">{{ num }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+        
+        {% if students.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ students.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if classe_filter %}&classe={{ classe_filter }}{% endif %}">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 
 <!-- Add Student Modal -->
 <div class="modal fade" id="addStudentModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="fas fa-user-plus me-2"></i>
                     Nouvel Étudiant
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form id="addStudentForm" class="needs-validation" novalidate>
+                <form id="addStudentForm">
+                    {% csrf_token %}
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Prénom *</label>
-                            <input type="text" class="form-control" required>
+                            <label class="form-label">Prénom</label>
+                            <input type="text" name="fname" class="form-control" required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Nom *</label>
-                            <input type="text" class="form-control" required>
+                            <label class="form-label">Nom</label>
+                            <input type="text" name="lname" class="form-control" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">CIN *</label>
-                            <input type="text" class="form-control" placeholder="A123456" required>
+                            <label class="form-label">Date de naissance</label>
+                            <input type="date" name="bday" class="form-control">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Date de naissance *</label>
-                            <input type="date" class="form-control" required>
+                            <label class="form-label">Genre</label>
+                            <select name="gender" class="form-select">
+                                <option value="">Sélectionner</option>
+                                <option value="M">Masculin</option>
+                                <option value="F">Féminin</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Téléphone</label>
-                            <input type="tel" class="form-control" placeholder="+212 6 12 34 56 78">
+                            <label class="form-label">Classe</label>
+                            <select name="classe" class="form-select">
+                                <option value="">Sélectionner</option>
+                                {% for classe in classes %}
+                                <option value="{{ classe.id }}">{{ classe.classe_name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Ville</label>
-                            <select class="form-select">
-                                <option value="">Sélectionner une ville</option>
-                                <option value="Casablanca">Casablanca</option>
-                                <option value="Rabat">Rabat</option>
-                                <option value="Fès">Fès</option>
-                                <option value="Marrakech">Marrakech</option>
-                                <option value="Agadir">Agadir</option>
-                                <option value="Tanger">Tanger</option>
-                            </select>
+                            <input type="text" name="city" class="form-control" value="Casablanca">
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">Formation</label>
-                            <select class="form-select">
-                                <option value="">Sélectionner une formation</option>
-                                <option value="dev-web">Développement Web</option>
-                                <option value="marketing">Marketing Digital</option>
-                                <option value="gestion">Gestion de Projet</option>
-                                <option value="design">Design Graphique</option>
-                            </select>
-                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Adresse</label>
+                        <textarea name="address" class="form-control" rows="2"></textarea>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary btn-loading" onclick="saveStudent()">
-                    <i class="fas fa-save me-1"></i>
-                    Enregistrer
+                <button type="button" class="btn btn-primary" id="saveStudentBtn">
+                    <i class="fas fa-save me-1"></i>Enregistrer
                 </button>
             </div>
         </div>
     </div>
 </div>
-{% endblock %}
 
-{% block extra_js %}
 <script>
-// Search functionality
-document.getElementById('searchInput').addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    const studentCards = document.querySelectorAll('.student-item');
-    
-    studentCards.forEach(card => {
-        const text = card.textContent.toLowerCase();
-        if (text.includes(searchTerm)) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-});
-
-// Filter functionality
-document.querySelectorAll('.filter-chip').forEach(chip => {
-    chip.addEventListener('click', function() {
-        // Remove active class from all chips
-        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
-        // Add active class to clicked chip
-        this.classList.add('active');
-        
-        const filter = this.getAttribute('data-filter');
-        // Implement filtering logic here
-        console.log('Filtering by:', filter);
-    });
-});
-
-// Student actions
-function viewStudent(id) {
-    if (id && id !== 'undefined') {
-        window.location.href = `/student/${id}/details/`;
-    } else {
-        Utils.showToast('Détails de l\'étudiant non disponibles', 'warning');
-    }
-}
-
-function editStudent(id) {
-    Utils.showToast(`Modification du stagiaire ${id}`, 'warning');
-}
-
-function deleteStudent(id) {
-    Utils.confirm(
-        'Êtes-vous sûr de vouloir supprimer ce stagiaire ?',
-        (confirmed) => {
-            if (confirmed) {
-                Utils.showToast('Stagiaire supprimé avec succès', 'success');
+// Fonction pour obtenir le token CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
             }
         }
-    );
-}
-
-function saveStudent() {
-    const form = document.getElementById('addStudentForm');
-    if (form.checkValidity()) {
-        // Simulate saving
-        setTimeout(() => {
-            Utils.showToast('Stagiaire ajouté avec succès!', 'success');
-            bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
-            form.reset();
-        }, 2000);
-    } else {
-        form.classList.add('was-validated');
     }
+    return cookieValue;
 }
 
-function exportStudents() {
-    Utils.showToast('Export en cours...', 'info');
-    // Implement export functionality
-}
+const csrftoken = getCookie('csrftoken');
+
+// Ajouter un étudiant
+document.getElementById('saveStudentBtn').addEventListener('click', function() {
+    const form = document.getElementById('addStudentForm');
+    const formData = new FormData(form);
+    
+    fetch('{% url "student:add_student" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrftoken,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            location.reload();
+        } else {
+            alert('Erreur: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Une erreur est survenue');
+    });
+});
+
+// Changer le statut de paiement
+document.querySelectorAll('.payment-status').forEach(function(element) {
+    element.addEventListener('click', function() {
+        const studentId = this.dataset.studentId;
+        const currentStatus = this.textContent.includes('Payé');
+        
+        const formData = new FormData();
+        formData.append('current_status', currentStatus);
+        
+        fetch(`/student/${studentId}/toggle-payment/`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': csrftoken,
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                if (data.new_status) {
+                    this.innerHTML = '✓ Payé';
+                    this.className = 'status-active payment-status';
+                } else {
+                    this.innerHTML = '✗ Impayé';
+                    this.className = 'status-inactive payment-status';
+                }
+                alert(data.message);
+            } else {
+                alert('Erreur: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Une erreur est survenue');
+        });
+    });
+});
+
+// Supprimer un étudiant
+document.querySelectorAll('.delete-student').forEach(function(element) {
+    element.addEventListener('click', function() {
+        const studentId = this.dataset.studentId;
+        const studentName = this.dataset.studentName;
+        
+        if (confirm(`Êtes-vous sûr de vouloir supprimer l'étudiant ${studentName} ?`)) {
+            fetch(`/student/${studentId}/delete/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    location.reload();
+                } else {
+                    alert('Erreur: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Une erreur est survenue');
+            });
+        }
+    });
+});
 </script>
 {% endblock %}

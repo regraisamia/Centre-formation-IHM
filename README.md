@@ -1,80 +1,175 @@
+# Centre de Formation Al Manar - Système de Gestion
+
 [![Open Source Love](https://badges.frapsoft.com/os/v2/open-source.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
-# StudX
+## 📋 Description
 
-**StudX** is a web-based school management system written in Python 3 and using Django framework.
-The application records personal data of student, teacher and Staff people. It allows to manage all the information that a school needs on a daily basis. 
+**Centre de Formation Al Manar** est un système de gestion moderne pour centres de formation professionnelle, développé avec Django et optimisé pour l'environnement marocain.
 
-:loudspeaker:
-**Notice:** This project has been initiated while learning Python 3 and the Django framework. The purpose of this project is purely for me the opportunity to learn coding and designing a web system and eventually to experience the challenges a full stack developper might face in its day job. It is still under development and all features are not completed yet! If you notice any coding error or security issue or if you have recommendations on design, coding or recommendations in general do not hesitate to contact me. 
+### ✨ Fonctionnalités Principales
 
-## Screenshots
-![image](https://user-images.githubusercontent.com/6607633/59228669-b6591900-8bd8-11e9-854c-012cebd92d0e.png)
-![image](https://user-images.githubusercontent.com/6607633/59228706-cec93380-8bd8-11e9-8746-88d6ba6833e8.png)
-![image](https://user-images.githubusercontent.com/6607633/59228742-e4d6f400-8bd8-11e9-85bc-1257341b49c5.png)
-![image](https://user-images.githubusercontent.com/6607633/59228919-56af3d80-8bd9-11e9-8154-afbda218d6e6.png)
-![image](https://user-images.githubusercontent.com/6607633/59228606-890c6b00-8bd8-11e9-8949-16ebb0014900.png)
-![image](https://user-images.githubusercontent.com/6607633/59386621-6b214080-8d67-11e9-9021-cf6968923c7a.png)
+- 🎓 **Gestion des Étudiants** : Inscription, suivi, profils détaillés
+- 📚 **Gestion des Formations** : Programmes, matières, planning
+- 👨🏫 **Gestion des Formateurs** : Profils, spécialités, planning
+- 📊 **Tableau de Bord** : Statistiques en temps réel, graphiques
+- 📝 **Notes et Évaluations** : Système de notation complet
+- 📅 **Planning** : Gestion des sessions et emplois du temps
+- 🏆 **Certificats** : Génération et suivi des certifications
+- 💰 **Finances** : Suivi des paiements et facturation
+- 📱 **Interface Responsive** : Compatible tous écrans
 
-### In development features
+## 🚀 Installation Rapide (XAMPP)
 
-* Student records keeping
-* Discipline management
-* Attendance management
-* Internal communication
-* Student, Teacher, Staff Schedule
+### Prérequis
+- XAMPP installé et démarré (Apache + MySQL)
+- Python 3.7+ installé
+- Git (optionnel)
 
-## Getting Started
+### Étapes d'Installation
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See installing instructions for notes on how to deploy the project on a live system.
+1. **Cloner ou télécharger le projet**
+   ```bash
+   git clone <repository-url>
+   cd StudX
+   ```
 
-### Prerequisites
-You will find hereafter what I use to develop and to run the project
-* Ubuntu Server 16.04 LTS 
-* Apache Web Server
-* Python 3
-* Django 2
-* MySQL database
-* Virtualenv (not mandatory but highly recommended)
+2. **Créer la base de données MySQL**
+   - Ouvrir phpMyAdmin (http://localhost/phpmyadmin)
+   - Créer une nouvelle base de données nommée `studx_database`
+   - Utiliser l'encodage `utf8mb4_general_ci`
 
-### Installing
-I use Virtualenv for developping this project so I recommend you to create an virtual environment `virtualenv venv` and to install the requirements `pip install -r requirements.txt`. Then, get a local copy of the project directory by cloning "StudX" from github.
+3. **Exécuter le script d'installation**
+   ```bash
+   setup.bat
+   ```
+   
+   Ou manuellement :
+   ```bash
+   pip install -r requirements.txt
+   python manage.py makemigrations
+   python manage.py migrate
+   python manage.py collectstatic --noinput
+   python populate_data.py
+   ```
 
-Then follow these steps:
-1. create the database by typing in mysql command line `create database Studx_database`
-2. Provide the required information to the `DATABASES` dictionnary by editing `/StudX/settings.py`
-3. Create the tables with the django command line `python manage.py makemigrations` then `python manage.py migrate`
-4. Finally, run the django server `python manage.py runserver <your-ip:port>`
+4. **Démarrer le serveur**
+   ```bash
+   python manage.py runserver
+   ```
 
-## Built With
+5. **Accéder à l'application**
+   - Interface principale : http://localhost:8000
+   - Administration : http://localhost:8000/admin
+   - **Login Admin** : `admin` / `admin123`
 
-* [Python 3](https://www.python.org/downloads/) - Programming language
-* [Django](https://www.djangoproject.com/) - Web framework 
-* [MySQL](https://www.mysql.com/) - Database
+## 🎯 Utilisation
 
+### Interface Principale
+- **Tableau de Bord** : Vue d'ensemble avec statistiques
+- **Étudiants** : Gestion complète des étudiants
+- **Formations** : Programmes et matières
+- **Planning** : Sessions et emplois du temps
+- **Rapports** : Analyses et statistiques
 
-## Contributing
-Contributions will be warmly welcomed. 
-A [wiki](https://github.com/ghrimx/StudX/wiki) is in progress to describe the design. 
+### Interface d'Administration
+- Accès complet à toutes les données
+- Gestion des utilisateurs et permissions
+- Configuration du système
+- Import/Export de données
 
-## Versioning
-I use exclusively Github
+## 🛠️ Technologies Utilisées
 
-## Authors
+- **Backend** : Django 2.2, Python 3
+- **Base de Données** : MySQL
+- **Frontend** : Bootstrap 5, HTML5, CSS3, JavaScript
+- **Graphiques** : Chart.js
+- **Animations** : AOS (Animate On Scroll)
+- **Icons** : Font Awesome 6
 
-* **Debruycker Vincent**
+## 📊 Données de Démonstration
 
-## License
+Le système inclut des données de démonstration réalistes :
+- 30 étudiants avec noms marocains
+- 8 formations professionnelles
+- 10 matières d'enseignement
+- 5 salles de formation
+- Notes et présences d'exemple
 
-This is an open source project not under any particular license.
-However framework, packages and librairies used are on their own licenses. Be aware of this if you intend to use part of this project for your own project.
+## 🔧 Configuration
 
-### List of licensed resources 
-* [CodyHouse - Schedule template](https://github.com/CodyHouse/schedule-template.git)
-* [TinyMCE - HTML editor package](https://www.tiny.cloud/)
-* [django-widget-tweaks](https://pypi.org/project/django-widget-tweaks/)
+### Base de Données
+Le fichier `settings.py` est configuré pour MySQL :
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'studx_database',
+        'USER': 'root',
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+```
 
+### Personnalisation
+- **Couleurs** : Modifiez les variables CSS dans `static/css/modern-dashboard.css`
+- **Logo** : Remplacez dans les templates
+- **Données** : Modifiez `populate_data.py` pour vos données
 
+## 📁 Structure du Projet
 
+```
+StudX/
+├── dashboard/          # Tableau de bord
+├── student/           # Gestion étudiants
+├── configuration/     # Formations et matières
+├── schedule/         # Planning
+├── user/            # Authentification
+├── templates/       # Templates HTML
+├── static/         # CSS, JS, images
+├── media/          # Fichiers uploadés
+└── StudX/          # Configuration Django
+```
 
+## 🤝 Contribution
 
+Les contributions sont les bienvenues !
+
+1. Fork le projet
+2. Créer une branche (`git checkout -b feature/nouvelle-fonctionnalite`)
+3. Commit (`git commit -am 'Ajout nouvelle fonctionnalité'`)
+4. Push (`git push origin feature/nouvelle-fonctionnalite`)
+5. Créer une Pull Request
+
+## 📝 Licence
+
+Ce projet est open source. Consultez les licences des frameworks utilisés.
+
+## 🆘 Support
+
+Pour toute question ou problème :
+- Créer une issue sur GitHub
+- Consulter la documentation Django
+- Vérifier la configuration XAMPP
+
+## 🔄 Mises à Jour
+
+### Version 2.0 (Actuelle)
+- ✅ Interface moderne et responsive
+- ✅ Thème marocain
+- ✅ Données réalistes
+- ✅ Administration améliorée
+- ✅ Graphiques interactifs
+- ✅ Optimisation mobile
+
+### Prochaines Fonctionnalités
+- 📧 Notifications par email
+- 📱 Application mobile
+- 🔐 Authentification avancée
+- 📊 Rapports PDF
+- 🌐 Multi-langues
+
+---
+
+**Développé avec ❤️ pour les centres de formation marocains**
