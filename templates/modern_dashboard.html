@@ -59,13 +59,28 @@
                     <i class="fas fa-sun me-2"></i>
                     Bonjour, {{ user.get_full_name|default:user.username }}!
                 </h2>
-                <p class="mb-0 fs-5">
-                    Bienvenue dans votre centre de formation. 
+                <p class="mb-2 fs-5">
+                    Bienvenue dans votre centre de formation Al Manar. 
                     Aujourd'hui, vous avez <strong>{{ todays_sessions|default:5 }}</strong> sessions programmées.
                 </p>
+                <div class="d-flex align-items-center mt-3">
+                    <div class="me-4">
+                        <small class="text-white-50">Météo Casablanca</small><br>
+                        <span class="h5"><i class="fas fa-sun me-1"></i>22°C</span>
+                    </div>
+                    <div>
+                        <small class="text-white-50">{{ "now"|date:"l d F Y" }}</small><br>
+                        <span class="h6">{{ "now"|date:"H:i" }}</span>
+                    </div>
+                </div>
             </div>
             <div class="col-md-4 text-end">
-                <i class="fas fa-graduation-cap" style="font-size: 4rem; opacity: 0.3;"></i>
+                <div class="position-relative">
+                    <i class="fas fa-graduation-cap" style="font-size: 4rem; opacity: 0.3;"></i>
+                    <div class="position-absolute top-0 end-0">
+                        <span class="badge bg-warning rounded-pill">{{ pending_tasks|default:3 }}</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

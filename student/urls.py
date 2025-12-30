@@ -12,6 +12,7 @@ app_name = 'student'
 urlpatterns = [
 	path('student_list', views.student_list, name='student_list'),
 	path('list', views.student_list, name='list'),  # Alternative URL
+	path('<uuid:uuid>/details/', views.student_detail, name='student_detail'),
 	path('<uuid:uuid>/details/', views.view_student, name='view_student'),
 	path('<uuid:student_uuid>/note/create', views.create_edit_student_note, name='create_student_note'),
 	path('<uuid:student_uuid>/note/<uuid:note_uuid>/edit', views.create_edit_student_note, name='edit_student_note'),

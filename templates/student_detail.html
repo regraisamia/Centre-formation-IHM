@@ -1,0 +1,524 @@
+{% extends 'modern_dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Profil Étudiant - {{ student.fname }} {{ student.lname }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .student-header {
+        background: linear-gradient(135deg, #2E8B57 0%, #228B22 100%);
+        color: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .student-header::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+    }
+    
+    .student-avatar {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3rem;
+        font-weight: bold;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        z-index: 2;
+    }
+    
+    .info-card {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+    
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid #f8f9fa;
+    }
+    
+    .info-item:last-child {
+        border-bottom: none;
+    }
+    
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, #2E8B57, #228B22);
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1rem;
+    }
+    
+    .progress-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+    }
+    
+    .progress-item {
+        margin-bottom: 20px;
+    }
+    
+    .progress-item:last-child {
+        margin-bottom: 0;
+    }
+    
+    .custom-progress {
+        height: 8px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        overflow: hidden;
+    }
+    
+    .custom-progress-bar {
+        height: 100%;
+        border-radius: 10px;
+        background: linear-gradient(90deg, #FFD700, #FFA500);
+        transition: width 0.6s ease;
+    }
+    
+    .activity-timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    
+    .activity-timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #2E8B57;
+    }
+    
+    .timeline-item {
+        position: relative;
+        margin-bottom: 25px;
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -37px;
+        top: 20px;
+        width: 12px;
+        height: 12px;
+        background: #2E8B57;
+        border-radius: 50%;
+        border: 3px solid white;
+        box-shadow: 0 0 0 3px #2E8B57;
+    }
+    
+    .grade-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .grade-excellent { background: #d4edda; color: #155724; }
+    .grade-good { background: #d1ecf1; color: #0c5460; }
+    .grade-average { background: #fff3cd; color: #856404; }
+    .grade-poor { background: #f8d7da; color: #721c24; }
+    
+    .contact-item {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .action-buttons {
+        position: sticky;
+        top: 20px;
+        z-index: 100;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Student Header -->
+    <div class="student-header" data-aos="fade-up">
+        <div class="row align-items-center">
+            <div class="col-md-2">
+                <div class="student-avatar">
+                    {{ student.fname|first }}{{ student.lname|first }}
+                </div>
+            </div>
+            <div class="col-md-7">
+                <h2 class="mb-2">{{ student.fname }} {{ student.lname }}</h2>
+                <p class="mb-1 opacity-75">
+                    <i class="fas fa-id-card me-2"></i>{{ student.matricule }}
+                    <span class="mx-3">|</span>
+                    <i class="fas fa-graduation-cap me-2"></i>{{ student.classe.classe_name|default:"Non assigné" }}
+                </p>
+                <div class="d-flex align-items-center">
+                    <span class="badge bg-success me-2">{{ student.get_status_display|default:"Actif" }}</span>
+                    <small class="opacity-75">
+                        <i class="fas fa-calendar me-1"></i>Inscrit le {{ student.created_at|date:"d/m/Y"|default:"01/01/2024" }}
+                    </small>
+                </div>
+            </div>
+            <div class="col-md-3 text-end">
+                <div class="action-buttons">
+                    <button class="btn btn-light me-2" onclick="printProfile()">
+                        <i class="fas fa-print me-1"></i>Imprimer
+                    </button>
+                    <button class="btn btn-warning" onclick="editStudent()">
+                        <i class="fas fa-edit me-1"></i>Modifier
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-4">
+            <!-- Personal Information -->
+            <div class="info-card" data-aos="fade-up" data-aos-delay="100">
+                <h5 class="mb-4">
+                    <i class="fas fa-user me-2 text-primary"></i>
+                    Informations Personnelles
+                </h5>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-birthday-cake"></i>
+                    </div>
+                    <div>
+                        <strong>Date de naissance</strong><br>
+                        <small class="text-muted">{{ student.bday|date:"d F Y"|default:"15 Mars 1998" }} ({{ student.get_age|default:25 }} ans)</small>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-venus-mars"></i>
+                    </div>
+                    <div>
+                        <strong>Genre</strong><br>
+                        <small class="text-muted">{{ student.get_gender_display|default:"Masculin" }}</small>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <strong>Adresse</strong><br>
+                        <small class="text-muted">
+                            {{ student.address.street|default:"123 Avenue Mohammed V" }}<br>
+                            {{ student.address.city|default:"Casablanca" }}, {{ student.address.zip|default:"20000" }}
+                        </small>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-id-card"></i>
+                    </div>
+                    <div>
+                        <strong>CIN</strong><br>
+                        <small class="text-muted">A123456</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="info-card" data-aos="fade-up" data-aos-delay="200">
+                <h5 class="mb-4">
+                    <i class="fas fa-phone me-2 text-primary"></i>
+                    Contact
+                </h5>
+                
+                <div class="contact-item">
+                    <div>
+                        <i class="fas fa-mobile-alt text-success me-2"></i>
+                        <strong>Téléphone</strong><br>
+                        <small class="text-muted">+212 6 12 34 56 78</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-success">
+                        <i class="fas fa-phone"></i>
+                    </button>
+                </div>
+                
+                <div class="contact-item">
+                    <div>
+                        <i class="fas fa-envelope text-info me-2"></i>
+                        <strong>Email</strong><br>
+                        <small class="text-muted">{{ student.fname|lower }}.{{ student.lname|lower }}@email.com</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-info">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Progress Overview -->
+            <div class="progress-card" data-aos="fade-up" data-aos-delay="300">
+                <h5 class="mb-4">
+                    <i class="fas fa-chart-line me-2"></i>
+                    Progression
+                </h5>
+                
+                <div class="progress-item">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Formation Générale</span>
+                        <span>75%</span>
+                    </div>
+                    <div class="custom-progress">
+                        <div class="custom-progress-bar" style="width: 75%"></div>
+                    </div>
+                </div>
+                
+                <div class="progress-item">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Projets Pratiques</span>
+                        <span>60%</span>
+                    </div>
+                    <div class="custom-progress">
+                        <div class="custom-progress-bar" style="width: 60%"></div>
+                    </div>
+                </div>
+                
+                <div class="progress-item">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Assiduité</span>
+                        <span>90%</span>
+                    </div>
+                    <div class="custom-progress">
+                        <div class="custom-progress-bar" style="width: 90%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-8">
+            <!-- Academic Performance -->
+            <div class="info-card" data-aos="fade-up" data-aos-delay="400">
+                <h5 class="mb-4">
+                    <i class="fas fa-chart-bar me-2 text-primary"></i>
+                    Performance Académique
+                </h5>
+                
+                <div class="row">
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="grade-badge grade-excellent">
+                            Excellent
+                        </div>
+                        <h4 class="mt-2 mb-0">16.5/20</h4>
+                        <small class="text-muted">Moyenne Générale</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="grade-badge grade-good">
+                            Bien
+                        </div>
+                        <h4 class="mt-2 mb-0">14.2/20</h4>
+                        <small class="text-muted">Projets</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="grade-badge grade-excellent">
+                            Excellent
+                        </div>
+                        <h4 class="mt-2 mb-0">18.0/20</h4>
+                        <small class="text-muted">Participation</small>
+                    </div>
+                    <div class="col-md-3 text-center mb-3">
+                        <div class="grade-badge grade-good">
+                            Bien
+                        </div>
+                        <h4 class="mt-2 mb-0">15.8/20</h4>
+                        <small class="text-muted">Examens</small>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <canvas id="performanceChart" height="100"></canvas>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="info-card" data-aos="fade-up" data-aos-delay="500">
+                <h5 class="mb-4">
+                    <i class="fas fa-history me-2 text-primary"></i>
+                    Activité Récente
+                </h5>
+                
+                <div class="activity-timeline">
+                    <div class="timeline-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">Projet Final Soumis</h6>
+                                <p class="mb-1 text-muted">Application web de gestion de bibliothèque</p>
+                                <small class="text-success">
+                                    <i class="fas fa-check-circle me-1"></i>Validé
+                                </small>
+                            </div>
+                            <small class="text-muted">Il y a 2 jours</small>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">Examen JavaScript</h6>
+                                <p class="mb-1 text-muted">Note obtenue: 17/20</p>
+                                <small class="text-info">
+                                    <i class="fas fa-star me-1"></i>Excellent
+                                </small>
+                            </div>
+                            <small class="text-muted">Il y a 1 semaine</small>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">Présentation Projet</h6>
+                                <p class="mb-1 text-muted">Présentation du projet e-commerce</p>
+                                <small class="text-warning">
+                                    <i class="fas fa-clock me-1"></i>En attente d'évaluation
+                                </small>
+                            </div>
+                            <small class="text-muted">Il y a 2 semaines</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="info-card" data-aos="fade-up" data-aos-delay="600">
+                <h5 class="mb-4">
+                    <i class="fas fa-bolt me-2 text-primary"></i>
+                    Actions Rapides
+                </h5>
+                
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-outline-primary w-100" onclick="addNote()">
+                            <i class="fas fa-sticky-note mb-2 d-block"></i>
+                            Ajouter Note
+                        </button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-outline-success w-100" onclick="markAttendance()">
+                            <i class="fas fa-check-circle mb-2 d-block"></i>
+                            Marquer Présence
+                        </button>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <button class="btn btn-outline-warning w-100" onclick="sendMessage()">
+                            <i class="fas fa-envelope mb-2 d-block"></i>
+                            Envoyer Message
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Performance Chart
+const ctx = document.getElementById('performanceChart').getContext('2d');
+const performanceChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Sep', 'Oct', 'Nov', 'Déc', 'Jan'],
+        datasets: [{
+            label: 'Moyenne',
+            data: [14.5, 15.2, 16.0, 16.8, 16.5],
+            borderColor: '#2E8B57',
+            backgroundColor: 'rgba(46, 139, 87, 0.1)',
+            borderWidth: 3,
+            fill: true,
+            tension: 0.4
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: false,
+                min: 10,
+                max: 20
+            }
+        }
+    }
+});
+
+// Action Functions
+function printProfile() {
+    window.print();
+}
+
+function editStudent() {
+    Utils.showToast('Redirection vers la page de modification...', 'info');
+}
+
+function addNote() {
+    Utils.showToast('Fonctionnalité d\'ajout de note en développement', 'info');
+}
+
+function markAttendance() {
+    Utils.showToast('Présence marquée avec succès!', 'success');
+}
+
+function sendMessage() {
+    Utils.showToast('Ouverture de la messagerie...', 'info');
+}
+</script>
+{% endblock %}

@@ -383,7 +383,11 @@ document.querySelectorAll('.filter-chip').forEach(chip => {
 
 // Student actions
 function viewStudent(id) {
-    Utils.showToast(`Affichage du stagiaire ${id}`, 'info');
+    if (id && id !== 'undefined') {
+        window.location.href = `/student/${id}/details/`;
+    } else {
+        Utils.showToast('Détails de l\'étudiant non disponibles', 'warning');
+    }
 }
 
 function editStudent(id) {

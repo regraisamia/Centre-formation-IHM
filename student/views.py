@@ -24,19 +24,130 @@ from common import *
 
 # Create your views here.
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
+from django.db import IntegrityError, transaction
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseRedirect, Http404, JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout, authenticate, login
+from django.urls import reverse, reverse_lazy
+from django.core.paginator import Paginator
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from datetime import datetime, timedelta
+from django.db.models import Count, Q, Avg
+from django.utils import timezone
+
+# import class from models
+from student.models import Student, Relationship, Parents, Parent_hasContacts, Student_hasContacts, Student_hasDocs, Address, Discipline_type, Disciplines, Disciplines_Details, Arrivals_Departures, Attendances, Student_Notes
+from user.models import User, ClasseOwnership
+from configuration.models import Classes
+
+#import class from forms.py
+from student.forms import DisciplineForm, DisciplineDetailsForm, DisciplineDetailsFormSet, DisciplineDetailsInlineFormSet, inoutForm, StudentNoteForm
+
+from common import *
+
 @login_required
 def student_list(request):
-    students = Student.objects.all().order_by('matricule')
+    # Get search and filter parameters
+    search_query = request.GET.get('search', '')
+    status_filter = request.GET.get('status', '')
+    formation_filter = request.GET.get('formation', '')
+    
+    # Base queryset
+    students = Student.objects.select_related('classe', 'address').all()
+    
+    # Apply filters
+    if search_query:
+        students = students.filter(
+            Q(fname__icontains=search_query) | 
+            Q(lname__icontains=search_query) |
+            Q(matricule__icontains=search_query)
+        )
+    
+    if status_filter:
+        students = students.filter(status=status_filter)
+        
+    if formation_filter:
+        students = students.filter(classe_id=formation_filter)
+    
+    # Order by most recent
+    students = students.order_by('-created_at')
+    
+    # Pagination
+    paginator = Paginator(students, 12)  # 12 students per page
+    page_number = request.GET.get('page')
+    students_page = paginator.get_page(page_number)
+    
+    # Statistics
+    total_students = Student.objects.count()
+    active_students = Student.objects.filter(status=1).count()
+    graduated_students = Student.objects.filter(status=4).count()
+    new_this_month = Student.objects.filter(
+        created_at__month=timezone.now().month,
+        created_at__year=timezone.now().year
+    ).count()
+    
+    # Get formations for filter
+    formations = Classes.objects.all()
     
     context = {
-        'students': students,
-        'total_students': students.count(),
-        'active_students': students.filter(status=1).count(),
-        'graduated_students': students.filter(status=4).count(),
-        'new_this_month': students.filter(created_at__month=datetime.now().month).count(),
+        'students': students_page,
+        'total_students': total_students,
+        'active_students': active_students,
+        'graduated_students': graduated_students,
+        'new_this_month': new_this_month,
+        'formations': formations,
+        'search_query': search_query,
+        'status_filter': status_filter,
+        'formation_filter': formation_filter,
     }
     
     return render(request, 'modern_student_list.html', context)
+
+@login_required
+def student_detail(request, uuid):
+    student = get_object_or_404(Student, uuid=uuid)
+    
+    # Get related data
+    student_contacts = student.student_hascontact.all()
+    relationships = Relationship.objects.filter(student=student).select_related('parent')
+    
+    # Academic performance (mock data for now)
+    performance_data = {
+        'general_average': 16.5,
+        'projects_average': 14.2,
+        'participation_average': 18.0,
+        'exams_average': 15.8,
+        'attendance_rate': 90,
+        'completion_rate': 75
+    }
+    
+    # Recent activities (mock data)
+    recent_activities = [
+        {
+            'title': 'Projet Final Soumis',
+            'description': 'Application web de gestion de bibliothèque',
+            'status': 'Validé',
+            'date': timezone.now() - timedelta(days=2)
+        },
+        {
+            'title': 'Examen JavaScript',
+            'description': 'Note obtenue: 17/20',
+            'status': 'Excellent',
+            'date': timezone.now() - timedelta(weeks=1)
+        }
+    ]
+    
+    context = {
+        'student': student,
+        'student_contacts': student_contacts,
+        'relationships': relationships,
+        'performance_data': performance_data,
+        'recent_activities': recent_activities,
+    }
+    
+    return render(request, 'student_detail.html', context)
 	
 @login_required
 def view_student(request, uuid):
