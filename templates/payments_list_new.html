@@ -1,0 +1,316 @@
+{% extends 'modern_dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Gestion des Paiements{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Gestion des Paiements</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPaymentModal">
+            <i class="fas fa-plus me-1"></i>Nouveau Paiement
+        </button>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-money-bill-wave"></i>
+            </div>
+            <div class="stat-number">125,450</div>
+            <div class="stat-label">Total Collecté (DH)</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-number">142</div>
+            <div class="stat-label">Paiements Reçus</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-number">14</div>
+            <div class="stat-label">En Attente</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <div class="stat-number">8</div>
+            <div class="stat-label">En Retard</div>
+        </div>
+    </div>
+</div>
+
+<!-- Filters -->
+<div class="search-box mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="input-group">
+                <span class="input-group-text">
+                    <i class="fas fa-search"></i>
+                </span>
+                <input type="text" class="form-control" placeholder="Rechercher un étudiant...">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select">
+                <option>Tous les statuts</option>
+                <option>Payé</option>
+                <option>En attente</option>
+                <option>En retard</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <select class="form-select">
+                <option>Toutes les formations</option>
+                <option>Développement Web</option>
+                <option>Marketing Digital</option>
+                <option>Gestion de Projet</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-outline-primary w-100">
+                <i class="fas fa-filter me-1"></i>Filtrer
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Payments List -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-credit-card me-1"></i>
+        Liste des Paiements
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Étudiant</th>
+                        <th>Formation</th>
+                        <th>Montant</th>
+                        <th>Date Échéance</th>
+                        <th>Date Paiement</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="student-avatar me-3">AB</div>
+                                <div>
+                                    <strong>Ahmed Benali</strong><br>
+                                    <small class="text-muted">ST2024001</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Développement Web</td>
+                        <td><strong>3,500 DH</strong></td>
+                        <td>15/12/2024</td>
+                        <td>12/12/2024</td>
+                        <td><span class="status-active">✓ Payé</span></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Reçu">
+                                    <i class="fas fa-receipt"></i>
+                                </button>
+                                <button class="btn btn-outline-info" title="Détails">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="student-avatar me-3">FZ</div>
+                                <div>
+                                    <strong>Fatima Zahra</strong><br>
+                                    <small class="text-muted">ST2024002</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Marketing Digital</td>
+                        <td><strong>2,800 DH</strong></td>
+                        <td>20/12/2024</td>
+                        <td>-</td>
+                        <td><span class="badge bg-warning">En attente</span></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-success" title="Marquer payé">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-outline-warning" title="Rappel">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="student-avatar me-3">YK</div>
+                                <div>
+                                    <strong>Youssef Kettani</strong><br>
+                                    <small class="text-muted">ST2024003</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Gestion de Projet</td>
+                        <td><strong>2,200 DH</strong></td>
+                        <td>10/12/2024</td>
+                        <td>-</td>
+                        <td><span class="badge bg-danger">En retard</span></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-success" title="Marquer payé">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-outline-danger" title="Relance">
+                                    <i class="fas fa-exclamation"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="student-avatar me-3">AF</div>
+                                <div>
+                                    <strong>Aicha Fassi</strong><br>
+                                    <small class="text-muted">ST2024004</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Développement Web</td>
+                        <td><strong>3,500 DH</strong></td>
+                        <td>18/12/2024</td>
+                        <td>16/12/2024</td>
+                        <td><span class="status-active">✓ Payé</span></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-primary" title="Reçu">
+                                    <i class="fas fa-receipt"></i>
+                                </button>
+                                <button class="btn btn-outline-info" title="Détails">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="student-avatar me-3">OI</div>
+                                <div>
+                                    <strong>Omar Idrissi</strong><br>
+                                    <small class="text-muted">ST2024005</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>Marketing Digital</td>
+                        <td><strong>2,800 DH</strong></td>
+                        <td>25/12/2024</td>
+                        <td>-</td>
+                        <td><span class="badge bg-warning">En attente</span></td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <button class="btn btn-outline-success" title="Marquer payé">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="btn btn-outline-warning" title="Rappel">
+                                    <i class="fas fa-bell"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Payment Modal -->
+<div class="modal fade" id="addPaymentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>
+                    Nouveau Paiement
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Étudiant</label>
+                        <select class="form-select" required>
+                            <option value="">Sélectionner un étudiant</option>
+                            <option>Ahmed Benali - ST2024001</option>
+                            <option>Fatima Zahra - ST2024002</option>
+                            <option>Youssef Kettani - ST2024003</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Formation</label>
+                            <select class="form-select" required>
+                                <option value="">Sélectionner</option>
+                                <option>Développement Web</option>
+                                <option>Marketing Digital</option>
+                                <option>Gestion de Projet</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Montant (DH)</label>
+                            <input type="number" class="form-control" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Date d'échéance</label>
+                            <input type="date" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mode de paiement</label>
+                            <select class="form-select" required>
+                                <option value="">Sélectionner</option>
+                                <option>Espèces</option>
+                                <option>Chèque</option>
+                                <option>Virement</option>
+                                <option>Carte bancaire</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Notes</label>
+                        <textarea class="form-control" rows="2"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary">
+                    <i class="fas fa-save me-1"></i>Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

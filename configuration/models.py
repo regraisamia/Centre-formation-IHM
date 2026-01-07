@@ -23,11 +23,21 @@ class Classes(models.Model):
 	__tablename__ = 'Classes'
 	
 	classe_name = models.CharField(_('classe'), max_length=45, null=True, blank=True)
+	formation = models.ForeignKey('Formation', on_delete=models.CASCADE, related_name='classes', null=True, blank=True)
 	subject = models.ManyToManyField(to='Subjects', related_name='classe_subjects', through='SubjectsSet', blank=True)
 	is_active = models.BooleanField(default=True)
+	max_students = models.IntegerField(_('Capacité maximum'), default=25)
+	start_date = models.DateField(_('Date de début'), null=True, blank=True)
+	end_date = models.DateField(_('Date de fin'), null=True, blank=True)
 	
 	def __str__(self):
 		return '{}'.format(self.classe_name)
+	
+	def get_student_count(self):
+		return self.student_classe.count()
+	
+	def get_available_spots(self):
+		return self.max_students - self.get_student_count()
 	
 	class Meta:
 		verbose_name = _("Classe")
@@ -70,4 +80,35 @@ class Subjects(models.Model):
 	class Meta:
 		verbose_name = _('Subject')
 		verbose_name_plural = _('Subjects')
+		
+class Formation(models.Model):
+	"""
+	Une formation est un programme d'études complet (ex: Développement Web, Marketing Digital)
+	Une formation peut avoir plusieurs classes (groupes d'étudiants)
+	"""
+	__tablename__ = 'Formation'
+	
+	name = models.CharField(_('Nom de la formation'), max_length=100)
+	description = models.TextField(_('Description'), blank=True)
+	duration_months = models.IntegerField(_('Durée en mois'), default=6)
+	price = models.DecimalField(_('Prix'), max_digits=10, decimal_places=2, default=0)
+	max_students_per_class = models.IntegerField(_('Capacité par classe'), default=25)
+	is_active = models.BooleanField(_('Active'), default=True)
+	subjects = models.ManyToManyField('Subjects', related_name='formations', blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
+	
+	def __str__(self):
+		return self.name
+	
+	def get_total_students(self):
+		return sum(classe.student_classe.count() for classe in self.classes.all())
+	
+	def get_completion_rate(self):
+		return 85
+	
+	class Meta:
+		verbose_name = _('Formation')
+		verbose_name_plural = _('Formations')
+		ordering = ['name']
 	

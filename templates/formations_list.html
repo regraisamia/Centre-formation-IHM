@@ -16,167 +16,106 @@
 <!-- Statistics -->
 <div class="row mb-4">
     <div class="col-md-3">
-        <div class="stat-card">
+        <div class="stat-card fade-in-up">
             <div class="stat-icon">
                 <i class="fas fa-graduation-cap"></i>
             </div>
-            <div class="stat-number">8</div>
-            <div class="stat-label">Total Formations</div>
+            <div class="stat-number">{{ total_formations }}</div>
+            <div class="stat-label">Formations Actives</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="stat-card">
+        <div class="stat-card fade-in-up">
             <div class="stat-icon">
                 <i class="fas fa-users"></i>
             </div>
-            <div class="stat-number">156</div>
+            <div class="stat-number">{{ total_students }}</div>
             <div class="stat-label">Étudiants Inscrits</div>
         </div>
     </div>
     <div class="col-md-3">
-        <div class="stat-card">
-            <div class="stat-icon">
-                <i class="fas fa-book"></i>
-            </div>
-            <div class="stat-number">25</div>
-            <div class="stat-label">Matières</div>
-        </div>
-    </div>
-    <div class="col-md-3">
-        <div class="stat-card">
+        <div class="stat-card fade-in-up">
             <div class="stat-icon">
                 <i class="fas fa-certificate"></i>
             </div>
-            <div class="stat-number">89</div>
-            <div class="stat-label">Diplômés</div>
+            <div class="stat-number">45</div>
+            <div class="stat-label">Diplômés ce mois</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card fade-in-up">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-number">1200</div>
+            <div class="stat-label">Heures de Formation</div>
         </div>
     </div>
 </div>
 
 <!-- Formations Grid -->
 <div class="row">
+    {% for formation in formations %}
     <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card h-100">
+        <div class="card h-100 fade-in-up">
             <div class="card-header bg-primary text-white">
                 <h5 class="card-title mb-0">
                     <i class="fas fa-laptop-code me-2"></i>
-                    Développement Web
+                    {{ formation.name }}
                 </h5>
             </div>
             <div class="card-body">
-                <p class="card-text">Formation complète en développement web moderne avec HTML, CSS, JavaScript et frameworks.</p>
+                <p class="card-text">{{ formation.description|default:"Description de la formation" }}</p>
                 <div class="row text-center mb-3">
                     <div class="col-4">
-                        <strong>45</strong><br>
+                        <strong>{{ formation.get_total_students|default:"0" }}</strong><br>
                         <small class="text-muted">Étudiants</small>
                     </div>
                     <div class="col-4">
-                        <strong>6</strong><br>
+                        <strong>{{ formation.duration_months }}</strong><br>
                         <small class="text-muted">Mois</small>
                     </div>
                     <div class="col-4">
-                        <strong>85%</strong><br>
+                        <strong>{{ formation.get_completion_rate }}%</strong><br>
                         <small class="text-muted">Réussite</small>
                     </div>
                 </div>
                 <div class="progress mb-3">
-                    <div class="progress-bar" style="width: 85%"></div>
+                    <div class="progress-bar" style="width: {{ formation.get_completion_rate }}%"></div>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">Prix:</small> <strong>{{ formation.price }} DH</strong>
+                </div>
+                <div class="mb-2">
+                    <small class="text-muted">Classes:</small> <strong>{{ formation.total_classes|default:"0" }}</strong>
                 </div>
             </div>
             <div class="card-footer">
                 <div class="btn-group w-100">
-                    <button class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-eye"></i> Voir
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm">
+                    <a href="{% url 'configuration:classes_list' %}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i> Classes
+                    </a>
+                    <button class="btn btn-outline-secondary btn-sm" onclick="Utils.showToast('Modification en développement', 'info')">
                         <i class="fas fa-edit"></i> Modifier
                     </button>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-success text-white">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-chart-line me-2"></i>
-                    Marketing Digital
-                </h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">Stratégies marketing digitales, SEO, réseaux sociaux et e-commerce.</p>
-                <div class="row text-center mb-3">
-                    <div class="col-4">
-                        <strong>38</strong><br>
-                        <small class="text-muted">Étudiants</small>
-                    </div>
-                    <div class="col-4">
-                        <strong>4</strong><br>
-                        <small class="text-muted">Mois</small>
-                    </div>
-                    <div class="col-4">
-                        <strong>92%</strong><br>
-                        <small class="text-muted">Réussite</small>
-                    </div>
-                </div>
-                <div class="progress mb-3">
-                    <div class="progress-bar bg-success" style="width: 92%"></div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="btn-group w-100">
-                    <button class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-eye"></i> Voir
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm">
-                        <i class="fas fa-edit"></i> Modifier
-                    </button>
-                </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-graduation-cap fa-4x text-muted mb-3"></i>
+                <h4 class="text-muted">Aucune formation trouvée</h4>
+                <p class="text-muted">Commencez par créer votre première formation</p>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addFormationModal">
+                    <i class="fas fa-plus me-1"></i>Créer une Formation
+                </button>
             </div>
         </div>
     </div>
-    
-    <div class="col-lg-4 col-md-6 mb-4">
-        <div class="card h-100">
-            <div class="card-header bg-warning text-white">
-                <h5 class="card-title mb-0">
-                    <i class="fas fa-tasks me-2"></i>
-                    Gestion de Projet
-                </h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">Méthodologies Agile, Scrum, management d'équipe et outils de gestion.</p>
-                <div class="row text-center mb-3">
-                    <div class="col-4">
-                        <strong>32</strong><br>
-                        <small class="text-muted">Étudiants</small>
-                    </div>
-                    <div class="col-4">
-                        <strong>3</strong><br>
-                        <small class="text-muted">Mois</small>
-                    </div>
-                    <div class="col-4">
-                        <strong>78%</strong><br>
-                        <small class="text-muted">Réussite</small>
-                    </div>
-                </div>
-                <div class="progress mb-3">
-                    <div class="progress-bar bg-warning" style="width: 78%"></div>
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="btn-group w-100">
-                    <button class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-eye"></i> Voir
-                    </button>
-                    <button class="btn btn-outline-secondary btn-sm">
-                        <i class="fas fa-edit"></i> Modifier
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    {% endfor %}
 </div>
 
 <!-- Add Formation Modal -->
@@ -191,55 +130,90 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="addFormationForm">
+                    {% csrf_token %}
                     <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-8 mb-3">
                             <label class="form-label">Nom de la Formation</label>
-                            <input type="text" class="form-control" required>
+                            <input type="text" name="name" class="form-control" placeholder="Ex: Développement Web" required>
                         </div>
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label class="form-label">Durée (mois)</label>
-                            <input type="number" class="form-control" min="1" max="24" required>
+                            <input type="number" name="duration_months" class="form-control" value="6" min="1" max="24" required>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea class="form-control" rows="3" required></textarea>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Description de la formation..."></textarea>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Prix (DH)</label>
-                            <input type="number" class="form-control" min="0" step="0.01">
+                            <input type="number" name="price" class="form-control" min="0" step="0.01" placeholder="3500">
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Capacité Maximum</label>
-                            <input type="number" class="form-control" min="1" max="50">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Matières Incluses</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="math">
-                            <label class="form-check-label" for="math">Mathématiques</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="info">
-                            <label class="form-check-label" for="info">Informatique</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="lang">
-                            <label class="form-check-label" for="lang">Langues</label>
+                            <label class="form-label">Capacité par Classe</label>
+                            <input type="number" name="max_students" class="form-control" value="25" min="1" max="50">
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" id="saveFormationBtn">
                     <i class="fas fa-save me-1"></i>Enregistrer
                 </button>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Ajouter une formation
+document.getElementById('saveFormationBtn').addEventListener('click', function() {
+    const form = document.getElementById('addFormationForm');
+    const formData = new FormData(form);
+    
+    Utils.showLoader(this);
+    
+    fetch('{% url "configuration:add_formation" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        Utils.hideLoader(this);
+        if (data.success) {
+            Utils.showToast(data.message, 'success');
+            location.reload();
+        } else {
+            Utils.showToast('Erreur: ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        Utils.hideLoader(this);
+        console.error('Error:', error);
+        Utils.showToast('Une erreur est survenue', 'error');
+    });
+});
+
+// Fonction pour obtenir le token CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
 {% endblock %}

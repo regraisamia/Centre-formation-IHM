@@ -1,0 +1,244 @@
+{% extends 'modern_dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Gestion des Classes{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Gestion des Classes</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addClasseModal">
+            <i class="fas fa-plus me-1"></i>Nouvelle Classe
+        </button>
+    </div>
+</div>
+
+<!-- Statistics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card fade-in-up">
+            <div class="stat-icon">
+                <i class="fas fa-chalkboard"></i>
+            </div>
+            <div class="stat-number">{{ total_classes }}</div>
+            <div class="stat-label">Total Classes</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card fade-in-up">
+            <div class="stat-icon">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-number">{{ total_students }}</div>
+            <div class="stat-label">Étudiants Inscrits</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card fade-in-up">
+            <div class="stat-icon">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="stat-number">{{ formations.count }}</div>
+            <div class="stat-label">Formations</div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card fade-in-up">
+            <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-number">92%</div>
+            <div class="stat-label">Taux de Réussite</div>
+        </div>
+    </div>
+</div>
+
+<!-- Classes List -->
+<div class="card fade-in-up">
+    <div class="card-header">
+        <i class="fas fa-list me-1"></i>
+        Liste des Classes
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Classe</th>
+                        <th>Formation</th>
+                        <th>Étudiants</th>
+                        <th>Capacité</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for classe in classes %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="student-avatar me-3">
+                                    {{ classe.classe_name.0|upper }}
+                                </div>
+                                <div>
+                                    <strong>{{ classe.classe_name }}</strong><br>
+                                    <small class="text-muted">ID: {{ classe.id }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if classe.formation %}
+                                <span class="badge bg-primary">{{ classe.formation.name }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Non assignée</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <strong>{{ classe.student_count }}</strong>
+                            {% if classe.student_count > 0 %}
+                                <small class="text-success">étudiants</small>
+                            {% else %}
+                                <small class="text-muted">aucun étudiant</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="progress" style="height: 20px;">
+                                {% if classe.max_students %}
+                                    {% widthratio classe.student_count classe.max_students 100 as percentage %}
+                                    <div class="progress-bar" style="width: {{ percentage }}%">
+                                        {{ classe.student_count }}/{{ classe.max_students }}
+                                    </div>
+                                {% else %}
+                                    <div class="progress-bar" style="width: 0%">
+                                        {{ classe.student_count }}/25
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td>
+                            {% if classe.is_active %}
+                                <span class="status-active">Active</span>
+                            {% else %}
+                                <span class="status-inactive">Inactive</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                <a href="{% url 'student:student_list' %}?classe={{ classe.classe_name }}" class="btn btn-outline-primary" title="Voir étudiants">
+                                    <i class="fas fa-users"></i>
+                                </a>
+                                <button class="btn btn-outline-secondary" title="Modifier" onclick="Utils.showToast('Fonctionnalité en développement', 'info')">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-outline-info" title="Planning" onclick="Utils.showToast('Planning en développement', 'info')">
+                                    <i class="fas fa-calendar"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="fas fa-chalkboard fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Aucune classe trouvée</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Add Classe Modal -->
+<div class="modal fade" id="addClasseModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fas fa-plus me-2"></i>
+                    Nouvelle Classe
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addClasseForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label">Nom de la Classe</label>
+                        <input type="text" name="classe_name" class="form-control" placeholder="Ex: Classe 1A" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Formation</label>
+                        <select name="formation" class="form-select">
+                            <option value="">Sélectionner une formation</option>
+                            {% for formation in formations %}
+                            <option value="{{ formation.id }}">{{ formation.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Capacité Maximum</label>
+                        <input type="number" name="max_students" class="form-control" value="25" min="1" max="50" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="saveClasseBtn">
+                    <i class="fas fa-save me-1"></i>Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Ajouter une classe
+document.getElementById('saveClasseBtn').addEventListener('click', function() {
+    const form = document.getElementById('addClasseForm');
+    const formData = new FormData(form);
+    
+    Utils.showLoader(this);
+    
+    fetch('{% url "configuration:add_classe" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        Utils.hideLoader(this);
+        if (data.success) {
+            Utils.showToast(data.message, 'success');
+            location.reload();
+        } else {
+            Utils.showToast('Erreur: ' + data.message, 'error');
+        }
+    })
+    .catch(error => {
+        Utils.hideLoader(this);
+        console.error('Error:', error);
+        Utils.showToast('Une erreur est survenue', 'error');
+    });
+});
+
+// Fonction pour obtenir le token CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

@@ -13,4 +13,5 @@ app_name = 'dashboard'
 
 urlpatterns = [
 	path( '', views.dashboard, name='dashboard'),
+	path('download-report/', views.download_report, name='download_report'),
 	]

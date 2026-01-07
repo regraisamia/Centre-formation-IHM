@@ -203,12 +203,12 @@
             </div>
             <div class="col-md-3 text-end">
                 <div class="action-buttons">
-                    <button class="btn btn-light me-2" onclick="printProfile()">
+                    <a href="{% url 'dashboard:download_report' %}" class="btn btn-light me-2">
                         <i class="fas fa-print me-1"></i>Imprimer
-                    </button>
-                    <button class="btn btn-warning" onclick="editStudent()">
-                        <i class="fas fa-edit me-1"></i>Modifier
-                    </button>
+                    </a>
+                    <a href="{% url 'student:student_list' %}" class="btn btn-warning">
+                        <i class="fas fa-arrow-left me-1"></i>Retour
+                    </a>
                 </div>
             </div>
         </div>
@@ -440,21 +440,21 @@
                 
                 <div class="row">
                     <div class="col-md-4 mb-3">
-                        <button class="btn btn-outline-primary w-100" onclick="addNote()">
-                            <i class="fas fa-sticky-note mb-2 d-block"></i>
-                            Ajouter Note
-                        </button>
+                        <a href="{% url 'student:student_list' %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-arrow-left mb-2 d-block"></i>
+                            Retour Liste
+                        </a>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <button class="btn btn-outline-success w-100" onclick="markAttendance()">
+                        <button class="btn btn-outline-success w-100" onclick="Utils.showToast('Présence marquée!', 'success')">
                             <i class="fas fa-check-circle mb-2 d-block"></i>
                             Marquer Présence
                         </button>
                     </div>
                     <div class="col-md-4 mb-3">
-                        <button class="btn btn-outline-warning w-100" onclick="sendMessage()">
-                            <i class="fas fa-envelope mb-2 d-block"></i>
-                            Envoyer Message
+                        <button class="btn btn-outline-info w-100" onclick="window.print()">
+                            <i class="fas fa-print mb-2 d-block"></i>
+                            Imprimer Profil
                         </button>
                     </div>
                 </div>

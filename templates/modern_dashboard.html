@@ -7,9 +7,9 @@
 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
     <h1 class="h2">Tableau de Bord</h1>
     <div class="btn-toolbar mb-2 mb-md-0">
-        <button type="button" class="btn btn-outline-secondary">
-            <i class="fas fa-download me-1"></i>Rapport
-        </button>
+        <a href="{% url 'dashboard:download_report' %}" class="btn btn-outline-primary">
+            <i class="fas fa-download me-1"></i>Télécharger Rapport
+        </a>
     </div>
 </div>
 
@@ -20,7 +20,7 @@
             <div class="stat-icon">
                 <i class="fas fa-user-graduate"></i>
             </div>
-            <div class="stat-number">156</div>
+            <div class="stat-number">{{ total_students }}</div>
             <div class="stat-label">Étudiants Inscrits</div>
         </div>
     </div>
@@ -30,7 +30,7 @@
             <div class="stat-icon">
                 <i class="fas fa-chalkboard"></i>
             </div>
-            <div class="stat-number">8</div>
+            <div class="stat-number">{{ total_classes }}</div>
             <div class="stat-label">Classes Actives</div>
         </div>
     </div>
@@ -40,8 +40,8 @@
             <div class="stat-icon">
                 <i class="fas fa-users"></i>
             </div>
-            <div class="stat-number">12</div>
-            <div class="stat-label">Enseignants</div>
+            <div class="stat-number">{{ total_subjects }}</div>
+            <div class="stat-label">Matières</div>
         </div>
     </div>
     
@@ -50,8 +50,8 @@
             <div class="stat-icon">
                 <i class="fas fa-money-bill-wave"></i>
             </div>
-            <div class="stat-number">85%</div>
-            <div class="stat-label">Paiements Reçus</div>
+            <div class="stat-number">{{ total_classes }}</div>
+            <div class="stat-label">Classes Actives</div>
         </div>
     </div>
 </div>
@@ -136,63 +136,34 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for student in recent_students %}
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="student-avatar me-3">AB</div>
+                                        <div class="student-avatar me-3">{{ student.fname.0 }}{{ student.lname.0 }}</div>
                                         <div>
-                                            <strong>Ahmed Benali</strong><br>
-                                            <small class="text-muted">ST2024001</small>
+                                            <strong>{{ student.fname }} {{ student.lname }}</strong><br>
+                                            <small class="text-muted">{{ student.matricule }}</small>
                                         </div>
                                     </div>
                                 </td>
-                                <td>Classe 3A</td>
-                                <td>15/12/2024</td>
+                                <td>{{ student.classe.classe_name|default:"Non assigné" }}</td>
+                                <td>{{ student.created_at|date:"d/m/Y" }}</td>
                                 <td><span class="status-active">✓ Payé</span></td>
                                 <td>
-                                    <button class="btn btn-sm btn-outline-primary">
+                                    <a href="{% url 'student:student_detail' student.uuid %}" class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-eye"></i>
-                                    </button>
+                                    </a>
                                 </td>
                             </tr>
+                            {% empty %}
                             <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="student-avatar me-3">FZ</div>
-                                        <div>
-                                            <strong>Fatima Zahra</strong><br>
-                                            <small class="text-muted">ST2024002</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Classe 2B</td>
-                                <td>14/12/2024</td>
-                                <td><span class="status-active">✓ Payé</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
+                                <td colspan="5" class="text-center py-4">
+                                    <i class="fas fa-users fa-2x text-muted mb-2"></i>
+                                    <p class="text-muted">Aucun étudiant récent</p>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div class="student-avatar me-3">YK</div>
-                                        <div>
-                                            <strong>Youssef Kettani</strong><br>
-                                            <small class="text-muted">ST2024003</small>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>Classe 1A</td>
-                                <td>13/12/2024</td>
-                                <td><span class="status-inactive">✗ Impayé</span></td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-primary">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
